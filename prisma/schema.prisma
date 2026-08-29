@@ -1,0 +1,427 @@
+// Devotional Store - Prisma Schema
+// Phase 2: Complete database models
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ======================
+// AUTHENTICATION (Auth.js / NextAuth)
+// ======================
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  CUSTOMER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  phone         String?
+  passwordHash  String?   // For credentials login
+  role          Role      @default(CUSTOMER)
+  image         String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  addresses     Address[]
+  orders        Order[]
+  astrologyProfiles AstrologyProfile[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ======================
+// CATALOG
+// ======================
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  parentId    String?
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  displayOrder Int      @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+  bundleOffers BundleOfferCategory[]
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([parentId])
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  sku               String   @unique
+  name              String
+  slug              String   @unique
+  shortDescription  String?
+  fullDescription   String?  @db.Text
+  categoryId        String
+  category          Category @relation(fields: [categoryId], references: [id])
+
+  // Pricing
+  price             Decimal  @db.Decimal(10, 2)
+  compareAtPrice    Decimal? @db.Decimal(10, 2)  // Original / strike-through price
+  costPrice         Decimal? @db.Decimal(10, 2)
+  discountPercent   Decimal? @db.Decimal(5, 2)
+
+  // Inventory
+  stockQuantity     Int      @default(0)
+  lowStockThreshold Int      @default(5)
+  isActive          Boolean  @default(true)
+  isFeatured        Boolean  @default(false)
+  isBundleEligible  Boolean  @default(true)
+
+  // Physical attributes
+  weight            Decimal? @db.Decimal(8, 2)  // in grams
+  dimensions        String?                     // e.g. "10x5x3 cm"
+  shippingClass     String?                     // standard, heavy, fragile etc.
+
+  // Product type & certificates (especially for gemstones)
+  productType       String   @default("physical") // physical, gemstone, service
+  certificateAvailable Boolean @default(false)
+  certificateFee    Decimal? @db.Decimal(10, 2)
+  certificateProvider String?
+  certificateDisclosure String? @db.Text
+
+  // SEO
+  seoTitle          String?
+  seoDescription    String?
+
+  // Supplier / internal notes (admin only)
+  supplierInfo      String?  @db.Text
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  images            ProductImage[]
+  orderItems        OrderItem[]
+  bundleOffers      BundleOfferProduct[]
+
+  @@index([slug])
+  @@index([sku])
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([isFeatured])
+  @@index([productType])
+}
+
+model ProductImage {
+  id           String  @id @default(cuid())
+  productId    String
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl     String
+  altText      String?
+  displayOrder Int     @default(0)
+  isPrimary    Boolean @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([productId])
+  @@index([isPrimary])
+}
+
+// ======================
+// BUNDLE / 5-ITEM SAVINGS
+// ======================
+
+enum DiscountType {
+  FIXED_AMOUNT
+  PERCENTAGE
+  FREE_SHIPPING
+  SHIPPING_DISCOUNT
+}
+
+model BundleOffer {
+  id               String       @id @default(cuid())
+  name             String
+  minimumQuantity  Int          @default(5)
+  maximumQuantity  Int?
+  discountType     DiscountType
+  discountValue    Decimal      @db.Decimal(10, 2)  // amount or percentage
+  message          String?      // Customer-facing message
+  startDate        DateTime?
+  endDate          DateTime?
+  isActive         Boolean      @default(true)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  eligibleProducts   BundleOfferProduct[]
+  eligibleCategories BundleOfferCategory[]
+
+  @@index([isActive])
+}
+
+model BundleOfferProduct {
+  id            String      @id @default(cuid())
+  bundleOfferId String
+  productId     String
+  bundleOffer   BundleOffer @relation(fields: [bundleOfferId], references: [id], onDelete: Cascade)
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([bundleOfferId, productId])
+}
+
+model BundleOfferCategory {
+  id            String      @id @default(cuid())
+  bundleOfferId String
+  categoryId    String
+  bundleOffer   BundleOffer @relation(fields: [bundleOfferId], references: [id], onDelete: Cascade)
+  category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([bundleOfferId, categoryId])
+}
+
+// ======================
+// CUSTOMER ADDRESSES & ORDERS
+// ======================
+
+model Address {
+  id          String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName    String
+  phone       String
+  addressLine1 String
+  addressLine2 String?
+  city        String
+  state       String
+  postalCode  String
+  country     String  @default("India")
+  isDefault   Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders      Order[]
+
+  @@index([userId])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  PACKED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  customerId      String
+  customer        User          @relation(fields: [customerId], references: [id])
+  shippingAddressId String?
+  shippingAddress Address?      @relation(fields: [shippingAddressId], references: [id])
+
+  // Amounts (all calculated server-side)
+  subtotal        Decimal       @db.Decimal(10, 2)
+  discount        Decimal       @db.Decimal(10, 2) @default(0)
+  shippingFee     Decimal       @db.Decimal(10, 2) @default(0)
+  tax             Decimal       @db.Decimal(10, 2) @default(0)
+  total           Decimal       @db.Decimal(10, 2)
+
+  paymentStatus   PaymentStatus @default(PENDING)
+  orderStatus     OrderStatus   @default(PENDING)
+
+  // Snapshot of shipping address (in case address is deleted later)
+  shippingName    String?
+  shippingPhone   String?
+  shippingLine1   String?
+  shippingLine2   String?
+  shippingCity    String?
+  shippingState   String?
+  shippingPostal  String?
+  shippingCountry String?
+
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  items           OrderItem[]
+  payments        Payment[]
+
+  @@index([orderNumber])
+  @@index([customerId])
+  @@index([orderStatus])
+  @@index([paymentStatus])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id                 String  @id @default(cuid())
+  orderId            String
+  order              Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId          String?
+  product            Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  // Snapshots (so historical orders don't change when product data changes)
+  productNameSnapshot String
+  productSkuSnapshot  String?
+  priceSnapshot       Decimal @db.Decimal(10, 2)
+  quantity            Int
+  discount            Decimal @db.Decimal(10, 2) @default(0)
+  total               Decimal @db.Decimal(10, 2)
+
+  createdAt           DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  orderId         String
+  order           Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount          Decimal       @db.Decimal(10, 2)
+  currency        String        @default("INR")
+  status          PaymentStatus @default(PENDING)
+  provider        String?       // razorpay, cashfree, etc.
+  providerPaymentId String?     // ID from payment gateway
+  providerOrderId String?
+  method          String?       // upi, card, netbanking, etc.
+  paidAt          DateTime?
+  metadata        Json?         // Non-sensitive gateway response
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([providerPaymentId])
+  @@index([status])
+}
+
+// ======================
+// ASTROLOGY (Foundation)
+// ======================
+
+model AstrologyProfile {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name          String
+  dateOfBirth   DateTime @db.Date
+  timeOfBirth   String   // HH:mm format
+  placeOfBirth  String
+  latitude      Decimal? @db.Decimal(9, 6)
+  longitude     Decimal? @db.Decimal(9, 6)
+  timezone      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model GemstoneRule {
+  id                  String  @id @default(cuid())
+  name                String
+  planet              String? // e.g. "Jupiter", "Venus"
+  favorableConditions String? @db.Text
+  unfavorableConditions String? @db.Text
+  recommendedGemstone String
+  alternativeGemstone String?
+  caution             String? @db.Text
+  explanation         String? @db.Text
+  isActive            Boolean @default(true)
+  displayOrder        Int     @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([planet])
+  @@index([isActive])
+}
+
+// ======================
+// AUDIT & SYSTEM
+// ======================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String?  // Product, Order, etc.
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

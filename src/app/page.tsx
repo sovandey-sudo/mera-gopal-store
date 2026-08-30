@@ -46,11 +46,16 @@ async function getCategories() {
 async function getActiveBundle() {
   try {
     const now = new Date();
+
     return await prisma.bundleOffer.findFirst({
       where: {
         isActive: true,
         OR: [{ startDate: null }, { startDate: { lte: now } }],
-        AND: [{ OR: [{ endDate: null }, { endDate: { gte: now } }] }],
+        AND: [
+          {
+            OR: [{ endDate: null }, { endDate: { gte: now } }],
+          },
+        ],
       },
       orderBy: { createdAt: "desc" },
     });
@@ -76,64 +81,134 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative bg-gradient-to-br from-[#8B0000] via-[#6B0000] to-[#4a0000] text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-[#D4AF37] blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-[#D4AF37] blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-14 md:py-20 text-center">
-          <p className="text-[#D4AF37] font-medium text-sm tracking-widest uppercase mb-3">
-            {siteConfig.tagline}
-          </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4">
-            Shop with Devotion
-          </h1>
-          <p className="text-white/80 text-base sm:text-lg max-w-2xl mx-auto mb-8">
-            Laddu Gopal collection, Radha Rani attire, malas, puja essentials, and gemstones —
-            managed through a secure storefront.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-            <Link href="/products">
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                Explore Collection
-              </Button>
-            </Link>
-            <Link href="/search">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-[#8B0000]"
-              >
-                Search Products
-              </Button>
-            </Link>
-          </div>
-          <div className="flex flex-wrap gap-2 justify-center text-sm">
-            <Link href="/kundli" className="underline text-white/90 hover:text-[#D4AF37]">
-              Kundli (engine under development)
-            </Link>
-            <span className="text-white/40">·</span>
-            <Link
-              href="/gemstone-prediction"
-              className="underline text-white/90 hover:text-[#D4AF37]"
-            >
-              Gemstone guide
-            </Link>
+      {/* =========================================================
+          HERO
+      ========================================================== */}
+      <section className="relative overflow-hidden bg-[#8B0000] text-white">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000] via-[#720000] to-[#4a0000]" />
+
+        <div className="absolute top-0 left-0 w-72 h-72 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 items-center min-h-[520px] gap-8 py-12 md:py-16">
+            {/* Hero Content */}
+            <div className="text-center md:text-left order-2 md:order-1">
+              <p className="text-[#D4AF37] font-semibold text-sm tracking-[0.2em] uppercase mb-4">
+                {siteConfig.tagline}
+              </p>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5">
+                Shop with
+                <span className="block text-[#D4AF37]">
+                  Devotion
+                </span>
+              </h1>
+
+              <p className="text-white/85 text-base sm:text-lg max-w-xl mx-auto md:mx-0 mb-8">
+                Discover beautiful Laddu Gopal collections, Radha Rani attire,
+                puja essentials, malas, gemstones and devotional treasures
+                for your daily seva.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-7">
+                <Link href="/products">
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                  >
+                    Explore Collection
+                  </Button>
+                </Link>
+
+                <Link href="/search">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-[#8B0000]"
+                  >
+                    Search Products
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start text-sm">
+                <Link
+                  href="/categories/laddu-gopal"
+                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
+                >
+                  Laddu Gopal
+                </Link>
+
+                <span className="text-white/40">·</span>
+
+                <Link
+                  href="/categories/radha-rani"
+                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
+                >
+                  Radha Rani
+                </Link>
+
+                <span className="text-white/40">·</span>
+
+                <Link
+                  href="/categories/gemstones"
+                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
+                >
+                  Gemstones
+                </Link>
+
+                <span className="text-white/40">·</span>
+
+                <Link
+                  href="/kundli"
+                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
+                >
+                  Kundli
+                </Link>
+              </div>
+            </div>
+
+            {/* Laddu Gopal Hero Image */}
+            <div className="relative order-1 md:order-2 flex justify-center items-center">
+              <div className="absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-[#D4AF37]/15 blur-2xl" />
+
+              <div className="relative w-full max-w-[520px]">
+                <img
+                  src="/images/laddu-gopal-hero.png"
+                  alt="Laddu Gopal - Mera Gopal"
+                  className="w-full h-auto object-contain drop-shadow-2xl"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Categories */}
+      {/* =========================================================
+          CATEGORIES
+      ========================================================== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="flex items-end justify-between mb-6">
-          <h2 className="text-xl md:text-2xl font-bold text-[#2c1810]">Shop by Category</h2>
-          <Link href="/products" className="text-sm text-[#8B0000] hover:underline">
+          <h2 className="text-xl md:text-2xl font-bold text-[#2c1810]">
+            Shop by Category
+          </h2>
+
+          <Link
+            href="/products"
+            className="text-sm text-[#8B0000] hover:underline"
+          >
             View all
           </Link>
         </div>
+
         {categories.length === 0 ? (
-          <p className="text-sm text-[#2c1810]/50">Categories will appear after seeding.</p>
+          <p className="text-sm text-[#2c1810]/50">
+            Categories will appear after seeding.
+          </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {categories.map((cat) => (
@@ -142,19 +217,28 @@ export default async function HomePage() {
                 href={`/categories/${cat.slug}`}
                 className="bg-white border border-[#e8dfd0] rounded-xl p-4 text-center hover:border-[#8B0000]/40 transition-colors"
               >
-                <p className="text-sm font-medium text-[#2c1810]">{cat.name}</p>
+                <p className="text-sm font-medium text-[#2c1810]">
+                  {cat.name}
+                </p>
               </Link>
             ))}
           </div>
         )}
       </section>
 
-      {/* Featured */}
+      {/* =========================================================
+          FEATURED PRODUCTS
+      ========================================================== */}
       <section className="bg-[#f5f0e8]/50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-xl md:text-2xl font-bold text-[#2c1810] mb-6">Featured Products</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-[#2c1810] mb-6">
+            Featured Products
+          </h2>
+
           {featured.length === 0 ? (
-            <p className="text-sm text-[#2c1810]/50">No featured products yet.</p>
+            <p className="text-sm text-[#2c1810]/50">
+              No featured products yet.
+            </p>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {featured.map((p) => (
@@ -165,11 +249,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Latest */}
+      {/* =========================================================
+          LATEST ARRIVALS
+      ========================================================== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <h2 className="text-xl md:text-2xl font-bold text-[#2c1810] mb-6">Latest Arrivals</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-[#2c1810] mb-6">
+          Latest Arrivals
+        </h2>
+
         {latest.length === 0 ? (
-          <p className="text-sm text-[#2c1810]/50">No products yet. Run the database seed.</p>
+          <p className="text-sm text-[#2c1810]/50">
+            No products yet. Run the database seed.
+          </p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {latest.map((p) => (
@@ -179,18 +270,26 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* 5-item savings */}
+      {/* =========================================================
+          BUNDLE OFFER
+      ========================================================== */}
       {bundle && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
           <div className="bg-gradient-to-r from-[#8B0000] to-[#6B0000] rounded-2xl p-6 sm:p-8 text-white">
-            <h2 className="text-xl font-bold mb-2">{bundle.name}</h2>
+            <h2 className="text-xl font-bold mb-2">
+              {bundle.name}
+            </h2>
+
             <p className="text-white/85 text-sm mb-4 max-w-2xl">
               {bundle.message ||
                 `Order ${bundle.minimumQuantity} or more eligible items in one checkout to unlock ${savingsLabel}. Eligibility and amounts are configured by Admin and calculated on the server.`}
             </p>
+
             <p className="text-xs text-white/70 mb-4">
-              Minimum eligible quantity: {bundle.minimumQuantity} · Discount: {savingsLabel}
+              Minimum eligible quantity: {bundle.minimumQuantity} · Discount:{" "}
+              {savingsLabel}
             </p>
+
             <Link href="/products">
               <Button variant="secondary" size="md">
                 Shop eligible products
@@ -200,18 +299,29 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Gemstones + Kundli */}
+      {/* =========================================================
+          GEMSTONES + KUNDLI
+      ========================================================== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 grid md:grid-cols-2 gap-4">
+        {/* Gemstones */}
         <div className="bg-white border border-[#e8dfd0] rounded-2xl p-6">
-          <h2 className="text-lg font-bold text-[#2c1810] mb-2">Gemstones</h2>
+          <h2 className="text-lg font-bold text-[#2c1810] mb-2">
+            Gemstones
+          </h2>
+
           <p className="text-sm text-[#2c1810]/70 mb-4">
-            Browse gemstones listed by Admin. Certificate fees and disclosures appear only when
-            provided. No laboratory numbers are invented by this website.
+            Browse gemstones listed by Admin. Certificate fees and disclosures
+            appear only when provided. No laboratory numbers are invented by
+            this website.
           </p>
+
           <div className="flex flex-wrap gap-2">
             <Link href="/categories/gemstones">
-              <Button size="sm">Shop gemstones</Button>
+              <Button size="sm">
+                Shop gemstones
+              </Button>
             </Link>
+
             <Link href="/gemstone-prediction">
               <Button size="sm" variant="outline">
                 Traditional guide
@@ -219,12 +329,18 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
+
+        {/* Kundli */}
         <div className="bg-white border border-[#e8dfd0] rounded-2xl p-6">
-          <h2 className="text-lg font-bold text-[#2c1810] mb-2">Kundli</h2>
+          <h2 className="text-lg font-bold text-[#2c1810] mb-2">
+            Kundli
+          </h2>
+
           <p className="text-sm text-[#2c1810]/70 mb-4">
-            Enter birth details to request a chart. The calculation engine is under development —
-            we do not invent planetary positions.
+            Enter birth details to request a chart. The calculation engine is
+            under development — we do not invent planetary positions.
           </p>
+
           <Link href="/kundli">
             <Button size="sm" variant="outline">
               Open Kundli form
@@ -233,33 +349,54 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Trust / disclosure */}
+      {/* =========================================================
+          TRUST / DISCLOSURE
+      ========================================================== */}
       <section className="bg-[#f5f0e8]/60 border-t border-[#e8dfd0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-          <h2 className="text-lg font-bold text-[#2c1810] mb-3">Important information</h2>
+          <h2 className="text-lg font-bold text-[#2c1810] mb-3">
+            Important information
+          </h2>
+
           <ul className="text-sm text-[#2c1810]/70 space-y-2 max-w-3xl">
             <li>
-              Astrology features are under development and are not a substitute for professional
-              advice.
+              Astrology features are under development and are not a substitute
+              for professional advice.
             </li>
+
             <li>
-              Gemstone guidance is traditional in nature and does not guarantee health, financial,
-              or spiritual outcomes.
+              Gemstone guidance is traditional in nature and does not guarantee
+              health, financial, or spiritual outcomes.
             </li>
+
             <li>
-              Product photographs in development may be placeholders until Admin uploads real
-              images.
+              Product photographs in development may be placeholders until
+              Admin uploads real images.
             </li>
+
             <li>
-              <Link href="/disclaimer" className="text-[#8B0000] hover:underline">
+              <Link
+                href="/disclaimer"
+                className="text-[#8B0000] hover:underline"
+              >
                 Full disclaimer
               </Link>
+
               {" · "}
-              <Link href="/policies/privacy" className="text-[#8B0000] hover:underline">
+
+              <Link
+                href="/policies/privacy"
+                className="text-[#8B0000] hover:underline"
+              >
                 Privacy
               </Link>
+
               {" · "}
-              <Link href="/policies/terms" className="text-[#8B0000] hover:underline">
+
+              <Link
+                href="/policies/terms"
+                className="text-[#8B0000] hover:underline"
+              >
                 Terms
               </Link>
             </li>

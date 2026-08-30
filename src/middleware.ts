@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
   const role = token?.role as string | undefined;
   const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
 
-  // Admin routes protection
+  // Admin routes
   const isAdminRoute = path.startsWith("/admin");
   const isAdminLogin = path === "/admin/login";
 
@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  // Customer account routes protection
+  // Customer account routes
   const isAccountRoute = path.startsWith("/account");
 
   if (isAccountRoute && !isLoggedIn) {
@@ -45,6 +45,5 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/account/:path*",
-    "/api/auth/:path*",
   ],
 };

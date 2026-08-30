@@ -1,51 +1,50 @@
-{/* =========================================================
-    HERO - FULL WIDTH LADDU GOPAL IMAGE
-========================================================== */}
-<section className="relative w-full min-h-[620px] sm:min-h-[680px] lg:min-h-[720px] overflow-hidden bg-black text-white">
-
-  {/* Full-width background image */}
-  <img
-    src="/images/laddu-gopal-hero.png"
-    alt="Laddu Gopal - Mera Gopal"
-    className="absolute inset-0 block w-full h-full object-cover object-center"
-  />
-
-  {/* Dark overlay */}
+{/* Hero */}
+<section
+  className="relative w-full min-h-[720px] md:min-h-[800px] overflow-hidden text-white"
+  style={{
+    backgroundImage: "url('/images/mera-gopal-hero.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center center",
+    backgroundRepeat: "no-repeat",
+  }}
+>
+  {/* Dark overlay for readable text */}
   <div className="absolute inset-0 bg-black/45" />
 
-  {/* Additional readability gradient */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/65" />
+  {/* Hero content */}
+  <div className="relative z-10 flex min-h-[720px] md:min-h-[800px] items-center justify-center px-4 sm:px-6">
+    <div className="w-full max-w-4xl text-center">
 
-  {/* Content */}
-  <div className="relative z-10 w-full min-h-[620px] sm:min-h-[680px] lg:min-h-[720px] flex items-center justify-center px-4 sm:px-6">
-
-    <div className="w-full max-w-4xl mx-auto text-center">
-
-      <p className="text-[#D4AF37] font-semibold text-sm sm:text-base tracking-[0.25em] uppercase mb-5 drop-shadow-lg">
-        Divine Essentials for Daily Seva
+      {/* Tagline */}
+      <p className="mb-4 text-sm md:text-base font-semibold tracking-[0.35em] uppercase text-[#D4AF37]">
+        {siteConfig.tagline}
       </p>
 
-      <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-4 drop-shadow-2xl">
+      {/* Store name */}
+      <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight tracking-tight text-white drop-shadow-lg">
         Mera Gopal
       </h1>
 
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#D4AF37] mb-6 drop-shadow-xl">
+      {/* Main heading */}
+      <h2 className="mt-3 text-4xl sm:text-5xl md:text-6xl font-semibold text-[#D4AF37] drop-shadow-lg">
         Shop with Devotion
       </h2>
 
-      <p className="text-white text-base sm:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto mb-9 drop-shadow-lg">
+      {/* Description */}
+      <p className="mx-auto mt-6 max-w-3xl text-base sm:text-lg md:text-xl leading-relaxed text-white drop-shadow-md">
         Discover beautiful Laddu Gopal collections, Radha Rani attire,
         puja essentials, malas, gemstones and devotional treasures
         for your daily seva.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+      {/* Buttons */}
+      <div className="mt-9 flex flex-col sm:flex-row justify-center gap-4">
 
         <Link href="/products">
           <Button
             variant="secondary"
             size="lg"
-            className="w-full sm:w-auto min-w-[190px] shadow-xl"
+            className="w-full sm:w-auto bg-[#D4AF37] text-black hover:bg-[#E5C65A]"
           >
             Explore Collection
           </Button>
@@ -55,7 +54,7 @@
           <Button
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto min-w-[190px] border-2 border-white text-white hover:bg-white hover:text-[#8B0000] shadow-xl"
+            className="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-[#8B0000]"
           >
             Search Products
           </Button>
@@ -63,11 +62,12 @@
 
       </div>
 
-      <div className="flex flex-wrap gap-x-4 gap-y-2 justify-center text-sm sm:text-base">
+      {/* Quick links */}
+      <div className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-3 text-sm md:text-base">
 
         <Link
           href="/categories/laddu-gopal"
-          className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+          className="text-white underline underline-offset-4 hover:text-[#D4AF37]"
         >
           Laddu Gopal
         </Link>
@@ -76,7 +76,7 @@
 
         <Link
           href="/categories/radha-rani"
-          className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+          className="text-white underline underline-offset-4 hover:text-[#D4AF37]"
         >
           Radha Rani
         </Link>
@@ -85,7 +85,7 @@
 
         <Link
           href="/categories/gemstones"
-          className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+          className="text-white underline underline-offset-4 hover:text-[#D4AF37]"
         >
           Gemstones
         </Link>
@@ -94,7 +94,7 @@
 
         <Link
           href="/kundli"
-          className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+          className="text-white underline underline-offset-4 hover:text-[#D4AF37]"
         >
           Kundli
         </Link>

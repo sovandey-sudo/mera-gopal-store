@@ -16,10 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Devotional Store | Spiritual Products & Astrology",
-    template: "%s | Devotional Store",
+    default: "Mera Gopal | Divine Seva",
+    template: "%s | Mera Gopal",
   },
-  description: "Premium devotional products, Laddu Gopal items, Radha Rani dresses, gemstones, malas and traditional astrology services. Shop with devotion.",
+  description:
+    "Mera Gopal – Divine Seva. Laddu Gopal products, Radha Rani dresses, devotional essentials, gemstones and astrology services.",
 };
 
 export default function RootLayout({
@@ -29,9 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full overflow-x-hidden`}
+      >
         <Header />
-        <main className="flex-1">{children}</main>
+
+        <main className="w-full flex-1 min-w-0">
+          {children}
+        </main>
+
         <Footer />
       </body>
     </html>

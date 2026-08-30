@@ -8,10 +8,22 @@ import { siteConfig } from "@/lib/site";
 async function getFeaturedProducts() {
   try {
     return await prisma.product.findMany({
-      where: { isActive: true, isFeatured: true },
-      include: { images: { where: { isPrimary: true }, take: 1 } },
+      where: {
+        isActive: true,
+        isFeatured: true,
+      },
+      include: {
+        images: {
+          where: {
+            isPrimary: true,
+          },
+          take: 1,
+        },
+      },
       take: 8,
-      orderBy: { createdAt: "desc" },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   } catch {
     return [];
@@ -21,10 +33,21 @@ async function getFeaturedProducts() {
 async function getLatestProducts() {
   try {
     return await prisma.product.findMany({
-      where: { isActive: true },
-      include: { images: { where: { isPrimary: true }, take: 1 } },
+      where: {
+        isActive: true,
+      },
+      include: {
+        images: {
+          where: {
+            isPrimary: true,
+          },
+          take: 1,
+        },
+      },
       take: 8,
-      orderBy: { createdAt: "desc" },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   } catch {
     return [];
@@ -34,8 +57,12 @@ async function getLatestProducts() {
 async function getCategories() {
   try {
     return await prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { displayOrder: "asc" },
+      where: {
+        isActive: true,
+      },
+      orderBy: {
+        displayOrder: "asc",
+      },
       take: 12,
     });
   } catch {
@@ -50,14 +77,34 @@ async function getActiveBundle() {
     return await prisma.bundleOffer.findFirst({
       where: {
         isActive: true,
-        OR: [{ startDate: null }, { startDate: { lte: now } }],
+        OR: [
+          {
+            startDate: null,
+          },
+          {
+            startDate: {
+              lte: now,
+            },
+          },
+        ],
         AND: [
           {
-            OR: [{ endDate: null }, { endDate: { gte: now } }],
+            OR: [
+              {
+                endDate: null,
+              },
+              {
+                endDate: {
+                  gte: now,
+                },
+              },
+            ],
           },
         ],
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   } catch {
     return null;
@@ -82,114 +129,112 @@ export default async function HomePage() {
   return (
     <div>
       {/* =========================================================
-          HERO
+          HERO - FULL WIDTH LADDU GOPAL IMAGE
       ========================================================== */}
-      <section className="relative overflow-hidden bg-[#8B0000] text-white">
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#8B0000] via-[#720000] to-[#4a0000]" />
+      <section className="relative min-h-[620px] sm:min-h-[680px] lg:min-h-[720px] overflow-hidden text-white">
+        {/* Full-width Laddu Gopal image */}
+        <img
+          src="/images/laddu-gopal-hero.png"
+          alt="Laddu Gopal - Mera Gopal"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
 
-        <div className="absolute top-0 left-0 w-72 h-72 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/45" />
 
-        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#D4AF37]/10 blur-3xl" />
+        {/* Additional gradient for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/65" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 items-center min-h-[520px] gap-8 py-12 md:py-16">
-            {/* Hero Content */}
-            <div className="text-center md:text-left order-2 md:order-1">
-              <p className="text-[#D4AF37] font-semibold text-sm tracking-[0.2em] uppercase mb-4">
-                {siteConfig.tagline}
-              </p>
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 min-h-[620px] sm:min-h-[680px] lg:min-h-[720px] flex items-center justify-center">
+          <div className="text-center max-w-4xl">
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5">
-                Shop with
-                <span className="block text-[#D4AF37]">
-                  Devotion
-                </span>
-              </h1>
+            {/* Tagline */}
+            <p className="text-[#D4AF37] font-semibold text-sm sm:text-base tracking-[0.25em] uppercase mb-5 drop-shadow-lg">
+              Divine Essentials for Daily Seva
+            </p>
 
-              <p className="text-white/85 text-base sm:text-lg max-w-xl mx-auto md:mx-0 mb-8">
-                Discover beautiful Laddu Gopal collections, Radha Rani attire,
-                puja essentials, malas, gemstones and devotional treasures
-                for your daily seva.
-              </p>
+            {/* Main Heading */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-4 drop-shadow-2xl">
+              Mera Gopal
+            </h1>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-7">
-                <Link href="/products">
-                  <Button
-                    variant="secondary"
-                    size="lg"
-                    className="w-full sm:w-auto"
-                  >
-                    Explore Collection
-                  </Button>
-                </Link>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#D4AF37] mb-6 drop-shadow-xl">
+              Shop with Devotion
+            </h2>
 
-                <Link href="/search">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-[#8B0000]"
-                  >
-                    Search Products
-                  </Button>
-                </Link>
-              </div>
+            {/* Description */}
+            <p className="text-white text-base sm:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto mb-9 drop-shadow-lg">
+              Discover beautiful Laddu Gopal collections, Radha Rani attire,
+              puja essentials, malas, gemstones and devotional treasures
+              for your daily seva.
+            </p>
 
-              <div className="flex flex-wrap gap-3 justify-center md:justify-start text-sm">
-                <Link
-                  href="/categories/laddu-gopal"
-                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <Link href="/products">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="w-full sm:w-auto min-w-[190px] shadow-xl"
                 >
-                  Laddu Gopal
-                </Link>
+                  Explore Collection
+                </Button>
+              </Link>
 
-                <span className="text-white/40">·</span>
-
-                <Link
-                  href="/categories/radha-rani"
-                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
+              <Link href="/search">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto min-w-[190px] border-2 border-white text-white hover:bg-white hover:text-[#8B0000] shadow-xl"
                 >
-                  Radha Rani
-                </Link>
-
-                <span className="text-white/40">·</span>
-
-                <Link
-                  href="/categories/gemstones"
-                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
-                >
-                  Gemstones
-                </Link>
-
-                <span className="text-white/40">·</span>
-
-                <Link
-                  href="/kundli"
-                  className="text-white/90 hover:text-[#D4AF37] transition-colors"
-                >
-                  Kundli
-                </Link>
-              </div>
+                  Search Products
+                </Button>
+              </Link>
             </div>
 
-            {/* Laddu Gopal Hero Image */}
-            <div className="relative order-1 md:order-2 flex justify-center items-center">
-              <div className="absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-[#D4AF37]/15 blur-2xl" />
+            {/* Quick Links */}
+            <div className="flex flex-wrap gap-x-4 gap-y-2 justify-center text-sm sm:text-base">
+              <Link
+                href="/categories/laddu-gopal"
+                className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+              >
+                Laddu Gopal
+              </Link>
 
-              <div className="relative w-full max-w-[520px]">
-                <img
-                  src="/images/laddu-gopal-hero.png"
-                  alt="Laddu Gopal - Mera Gopal"
-                  className="w-full h-auto object-contain drop-shadow-2xl"
-                />
-              </div>
+              <span className="text-white/60">·</span>
+
+              <Link
+                href="/categories/radha-rani"
+                className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+              >
+                Radha Rani
+              </Link>
+
+              <span className="text-white/60">·</span>
+
+              <Link
+                href="/categories/gemstones"
+                className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+              >
+                Gemstones
+              </Link>
+
+              <span className="text-white/60">·</span>
+
+              <Link
+                href="/kundli"
+                className="text-white hover:text-[#D4AF37] underline underline-offset-4 transition-colors drop-shadow-lg"
+              >
+                Kundli
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* =========================================================
-          CATEGORIES
+          SHOP BY CATEGORY
       ========================================================== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="flex items-end justify-between mb-6">
@@ -350,7 +395,7 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================
-          TRUST / DISCLOSURE
+          IMPORTANT INFORMATION
       ========================================================== */}
       <section className="bg-[#f5f0e8]/60 border-t border-[#e8dfd0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">

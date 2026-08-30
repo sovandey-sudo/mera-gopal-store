@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/store/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/format";
-import { siteConfig } from "@/lib/site";
 
 async function getFeaturedProducts() {
   try {
@@ -100,48 +99,43 @@ export default async function HomePage() {
 
       {/* =========================================================
           HERO
-          FULL-BROWSER-WIDTH LADDU GOPAL IMAGE
+          FULL-WIDTH MERA GOPAL HERO IMAGE
       ========================================================== */}
       <section className="relative w-full min-h-[720px] md:min-h-[800px] overflow-hidden bg-black text-white">
 
-        {/* Full-width Laddu Gopal image */}
+        {/* Hero image */}
         <img
-          src="/images/laddu-gopal-hero.png"
+          src="/images/mera-gopal-hero.png"
           alt="Laddu Gopal - Mera Gopal"
           className="absolute inset-0 z-0 w-full h-full object-cover object-center"
         />
 
-        {/* Dark overlay */}
-        <div className="absolute inset-0 z-10 bg-black/50" />
+        {/* Readability overlay */}
+        <div className="absolute inset-0 z-10 bg-black/45" />
 
         {/* Hero content */}
         <div className="relative z-20 w-full min-h-[720px] md:min-h-[800px] flex items-center justify-center px-4 sm:px-6">
 
           <div className="w-full max-w-4xl mx-auto text-center">
 
-            {/* Tagline */}
             <p className="text-[#D4AF37] font-medium text-sm sm:text-base tracking-[0.25em] uppercase mb-4 drop-shadow-lg">
               Divine Essentials for Daily Seva
             </p>
 
-            {/* Store name */}
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight mb-4 drop-shadow-2xl">
               Mera Gopal
             </h1>
 
-            {/* Heading */}
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D4AF37] leading-tight mb-6 drop-shadow-xl">
               Shop with Devotion
             </h2>
 
-            {/* Description */}
             <p className="text-white text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-8 drop-shadow-lg">
               Discover beautiful Laddu Gopal collections, Radha Rani attire,
               puja essentials, malas, gemstones and devotional treasures for
               your daily seva.
             </p>
 
-            {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
 
               <Link href="/products">
@@ -166,7 +160,6 @@ export default async function HomePage() {
 
             </div>
 
-            {/* Quick links */}
             <div className="flex flex-wrap gap-x-4 gap-y-3 justify-center text-sm sm:text-base">
 
               <Link
@@ -206,7 +199,6 @@ export default async function HomePage() {
             </div>
 
           </div>
-
         </div>
       </section>
 
@@ -349,11 +341,9 @@ export default async function HomePage() {
             </p>
 
             <Link href="/products">
-
               <Button variant="secondary" size="md">
                 Shop eligible products
               </Button>
-
             </Link>
 
           </div>
@@ -368,7 +358,6 @@ export default async function HomePage() {
       ========================================================== */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 grid md:grid-cols-2 gap-4">
 
-        {/* Gemstones */}
         <div className="bg-white border border-[#e8dfd0] rounded-2xl p-6">
 
           <h2 className="text-lg font-bold text-[#2c1810] mb-2">
@@ -400,7 +389,6 @@ export default async function HomePage() {
         </div>
 
 
-        {/* Kundli */}
         <div className="bg-white border border-[#e8dfd0] rounded-2xl p-6">
 
           <h2 className="text-lg font-bold text-[#2c1810] mb-2">
@@ -413,11 +401,9 @@ export default async function HomePage() {
           </p>
 
           <Link href="/kundli">
-
             <Button size="sm" variant="outline">
               Open Kundli form
             </Button>
-
           </Link>
 
         </div>

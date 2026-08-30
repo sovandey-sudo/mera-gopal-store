@@ -48,3 +48,5 @@ next-env.d.ts
 /public/uploads
 
 src/app/.vs/
+
+prisma/seed.backup.ts

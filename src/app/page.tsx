@@ -1,18 +1,19 @@
 {/* Hero */}
-<section
-  className="relative w-full min-h-[720px] md:min-h-[800px] overflow-hidden text-white"
-  style={{
-    backgroundImage: "url('/images/mera-gopal-hero.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center center",
-    backgroundRepeat: "no-repeat",
-  }}
->
-  {/* Dark overlay for readable text */}
-  <div className="absolute inset-0 bg-black/45" />
+<section className="relative w-full min-h-[720px] md:min-h-[800px] overflow-hidden bg-black">
+
+  {/* FULL WIDTH HERO IMAGE */}
+  <img
+    src="/images/mera-gopal-hero.png"
+    alt="Laddu Gopal - Mera Gopal"
+    className="absolute inset-0 z-0 w-full h-full object-cover"
+  />
+
+  {/* Dark overlay */}
+  <div className="absolute inset-0 z-10 bg-black/45" />
 
   {/* Hero content */}
-  <div className="relative z-10 flex min-h-[720px] md:min-h-[800px] items-center justify-center px-4 sm:px-6">
+  <div className="relative z-20 flex min-h-[720px] md:min-h-[800px] w-full items-center justify-center px-4 sm:px-6">
+
     <div className="w-full max-w-4xl text-center">
 
       {/* Tagline */}
@@ -20,12 +21,12 @@
         {siteConfig.tagline}
       </p>
 
-      {/* Store name */}
+      {/* Store Name */}
       <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight tracking-tight text-white drop-shadow-lg">
         Mera Gopal
       </h1>
 
-      {/* Main heading */}
+      {/* Main Heading */}
       <h2 className="mt-3 text-4xl sm:text-5xl md:text-6xl font-semibold text-[#D4AF37] drop-shadow-lg">
         Shop with Devotion
       </h2>
@@ -62,7 +63,7 @@
 
       </div>
 
-      {/* Quick links */}
+      {/* Quick Links */}
       <div className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-3 text-sm md:text-base">
 
         <Link
@@ -102,5 +103,7 @@
       </div>
 
     </div>
+
   </div>
+
 </section>

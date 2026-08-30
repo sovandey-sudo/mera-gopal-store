@@ -29,7 +29,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files
-.env*
+.env
+.env*.local
 !.env.example
 
 # vercel
@@ -45,6 +46,3 @@ next-env.d.ts
 
 # uploads (local storage)
 /public/uploads
-
-.vercel
-.env*

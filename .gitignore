@@ -46,3 +46,5 @@ next-env.d.ts
 
 # uploads (local storage)
 /public/uploads
+
+src/app/.vs/

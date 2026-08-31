@@ -41,7 +41,6 @@ async function getProducts(searchParams: SearchParams) {
         category: true,
       },
       orderBy,
-      take: 48,
     });
   } catch {
     return [];
@@ -155,3 +154,4 @@ export default async function ProductsPage({
     </div>
   );
 }
+
